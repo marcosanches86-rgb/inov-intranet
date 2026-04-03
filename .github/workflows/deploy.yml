@@ -1,0 +1,42 @@
+name: Deploy to Hetzner
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Deploy via rsync SSH
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avz --delete
+            --exclude='.git'
+            --exclude='.github'
+            --exclude='backend/.env'
+            --exclude='backend/storage/uploads/*'
+            --exclude='backend/logs/*.log'
+            --exclude='debug.html'
+            --exclude='debug2.html'
+          path: ./
+          remote_path: /var/www/intranet/
+          remote_host: ${{ secrets.VPS_HOST }}
+          remote_user: ${{ secrets.VPS_USER }}
+          remote_key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Ajustar permissões
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            sudo chown -R www-data:www-data /var/www/intranet/backend/storage/uploads
+            sudo chmod -R 775 /var/www/intranet/backend/storage/uploads
+            sudo chown -R www-data:www-data /var/www/intranet/backend/logs
+            sudo chmod -R 775 /var/www/intranet/backend/logs
+            echo "Deploy concluído!"

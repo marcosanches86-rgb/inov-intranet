@@ -1,0 +1,64 @@
+# ================================================================
+#  INOV INTRANET — Backend .htaccess
+#  Security + URL Rewriting for PHP API
+# ================================================================
+
+Options -Indexes -ExecCGI -Includes
+
+# ── Rewrite Engine ──────────────────────────────────────────────
+RewriteEngine On
+
+# Force HTTPS (activate in production on Hostinger)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Block direct access to sensitive directories (NOT storage/uploads — serves images)
+RewriteRule ^(config|core|models|controllers|middlewares|helpers|database|logs)/ - [F,L]
+
+# Allow direct access to uploaded static files (images, PDFs, SVGs)
+RewriteCond %{REQUEST_URI} ^/backend/storage/uploads/
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Block direct access to PHP files (except index.php)
+RewriteCond %{REQUEST_URI} !/index\.php$
+RewriteRule \.php$ - [F,L]
+
+# Route ALL requests to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+# ── Security Headers ────────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    Header always unset X-Powered-By
+    Header always unset Server
+</IfModule>
+
+# ── Block dangerous file types ───────────────────────────────────
+<FilesMatch "\.(phtml|php3|php4|php5|asp|aspx|cgi|sh|py|rb|pl|exe|bat|cmd|jar)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# ── Block access to dotfiles ─────────────────────────────────────
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ── Disable signature ────────────────────────────────────────────
+ServerSignature Off
+
+# ── Charset ──────────────────────────────────────────────────────
+AddDefaultCharset UTF-8
+
+# ── Prevent MIME sniffing ────────────────────────────────────────
+<IfModule mod_mime.c>
+    AddType application/json .json
+</IfModule>

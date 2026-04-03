@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solicitar Acesso — INOV Intranet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body data-page="register">
+
+  <div class="auth-wrapper" style="max-width:500px;">
+    <div class="auth-card">
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <div class="auth-logo-mark">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="10" height="10" rx="2"/>
+            <rect x="18" y="4" width="10" height="10" rx="2" opacity="0.6"/>
+            <rect x="4" y="18" width="10" height="10" rx="2" opacity="0.6"/>
+            <rect x="18" y="18" width="10" height="10" rx="2"/>
+          </svg>
+        </div>
+        <div class="auth-logo-name">INOV Holding</div>
+        <div class="auth-logo-sub">Intranet Corporativa</div>
+      </div>
+
+      <!-- Heading -->
+      <div class="auth-heading">
+        <h1>Criar Conta</h1>
+        <p>Preencha os dados para solicitar acesso à intranet</p>
+      </div>
+
+      <!-- Step dots -->
+      <div class="auth-steps">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <!-- Alert -->
+      <div class="auth-alert" id="registerAlert"></div>
+
+      <!-- Form -->
+      <form id="registerForm" novalidate>
+
+        <!-- STEP 1 -->
+        <div id="step1">
+          <div class="form-group">
+            <label for="regName">Nome Completo *</label>
+            <div class="input-icon-wrap">
+              <span class="i-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <input type="text" id="regName" placeholder="Ex: João Silva" autocomplete="name" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="regEmail">Email Corporativo *</label>
+            <div class="input-icon-wrap">
+              <span class="i-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              <input type="email" id="regEmail" placeholder="nome@empresa.ao" autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="regCompany">Empresa *</label>
+            <select id="regCompany">
+              <option value="">Selecione a sua empresa</option>
+              <option value="inov">INOV Holding</option>
+              <option value="inovcap">INOV Capital</option>
+              <option value="inovenergy">INOV Energy</option>
+              <option value="inovtech">INOV Tech</option>
+              <option value="inovlogistics">INOV Logistics</option>
+              <option value="inovagrofoods">INOV AgroFoods</option>
+              <option value="inovhealth">INOV Health</option>
+              <option value="inovrealestate">INOV Real Estate</option>
+            </select>
+          </div>
+
+          <button type="button" class="btn-auth" id="nextBtn">Continuar</button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div id="step2" style="display:none;">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="regDept">Departamento *</label>
+              <div class="input-icon-wrap">
+                <span class="i-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </span>
+                <input type="text" id="regDept" placeholder="Ex: Financeiro" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="regJob">Cargo *</label>
+              <div class="input-icon-wrap">
+                <span class="i-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                </span>
+                <input type="text" id="regJob" placeholder="Ex: Analista" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="regPass">Password *</label>
+            <div class="input-icon-wrap">
+              <span class="i-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <input type="password" id="regPass" placeholder="Mínimo 8 caracteres" data-target="regPass" />
+              <button type="button" class="i-toggle" data-target="regPass" aria-label="Mostrar password">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+            <div class="pwd-strength"><div class="pwd-strength-bar" id="pwdBar"></div></div>
+          </div>
+
+          <div class="form-group">
+            <label for="regConfirm">Confirmar Password *</label>
+            <div class="input-icon-wrap">
+              <span class="i-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <input type="password" id="regConfirm" placeholder="Repita a password" />
+              <button type="button" class="i-toggle" data-target="regConfirm" aria-label="Mostrar password">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;">
+            <button type="button" class="btn-auth" id="backBtn" style="background:var(--surface);color:var(--text-2);border:1.5px solid var(--border);flex:0 0 auto;width:auto;padding:0 20px;">
+              Voltar
+            </button>
+            <button type="submit" class="btn-auth" id="submitBtn">Criar Conta</button>
+          </div>
+
+          <p class="policy-text">
+            Ao criar conta, aceita os <a href="#">Termos de Utilização</a> e
+            a <a href="#">Política de Privacidade</a> do Grupo INOV.
+          </p>
+        </div>
+
+      </form>
+
+      <div class="auth-footer">
+        Já tem conta? <a href="index.html">Entrar</a>
+      </div>
+
+    </div>
+
+    <div class="auth-back">
+      <a href="index.html">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Voltar ao Login
+      </a>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

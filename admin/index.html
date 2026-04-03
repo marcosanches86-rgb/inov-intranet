@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INOV CMS — Painel de Gestão</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<div class="cms-shell" id="cmsShell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="cms-sidebar" id="cmsSidebar">
+
+    <div class="cms-brand">
+      <div class="cms-brand-icon">
+        <svg viewBox="0 0 32 32" fill="currentColor" width="18" height="18">
+          <rect x="3" y="3"   width="11" height="11" rx="2.5"/>
+          <rect x="18" y="3"  width="11" height="11" rx="2.5" opacity="0.5"/>
+          <rect x="3" y="18"  width="11" height="11" rx="2.5" opacity="0.5"/>
+          <rect x="18" y="18" width="11" height="11" rx="2.5"/>
+        </svg>
+      </div>
+      <div class="cms-brand-text">
+        <strong>INOV CMS</strong>
+        <span>Painel de Gestão</span>
+      </div>
+    </div>
+
+    <nav class="cms-nav">
+
+      <div class="cms-nav-label">Visão Geral</div>
+      <a class="cms-nav-item active" data-module="dashboard" href="javascript:void(0)" onclick="cmsNavigate('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Dashboard</span>
+      </a>
+
+      <div class="cms-nav-label">Conteúdo</div>
+      <a class="cms-nav-item" data-module="news" href="javascript:void(0)" onclick="cmsNavigate('news')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg>
+        <span>Notícias</span>
+        <span class="cms-badge" id="badgeNewsCount"></span>
+      </a>
+      <a class="cms-nav-item" data-module="comunicados" href="javascript:void(0)" onclick="cmsNavigate('comunicados')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="m3 11 19-9-9 19-2-8-8-2z"/></svg>
+        <span>Comunicados</span>
+        <span class="cms-badge" id="badgeComunCount"></span>
+      </a>
+      <a class="cms-nav-item" data-module="docs" href="javascript:void(0)" onclick="cmsNavigate('docs')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Documentos</span>
+        <span class="cms-badge" id="badgeDocsCount"></span>
+      </a>
+
+      <div class="cms-nav-label">Biblioteca</div>
+      <a class="cms-nav-item" data-module="brands" href="javascript:void(0)" onclick="cmsNavigate('brands')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Marcas &amp; Assets</span>
+      </a>
+      <a class="cms-nav-item" data-module="gallery" href="javascript:void(0)" onclick="cmsNavigate('gallery')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>Galeria</span>
+      </a>
+
+      <div class="cms-nav-label">Organização</div>
+      <a class="cms-nav-item" data-module="empresas" href="javascript:void(0)" onclick="cmsNavigate('empresas')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Empresas</span>
+      </a>
+      <a class="cms-nav-item" data-module="users" href="javascript:void(0)" onclick="cmsNavigate('users')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Utilizadores</span>
+        <span class="cms-badge cms-badge-amber" id="badgeUsersCount"></span>
+      </a>
+
+      <div class="cms-nav-label">Sistema</div>
+      <a class="cms-nav-item" data-module="settings" href="javascript:void(0)" onclick="cmsNavigate('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Definições</span>
+      </a>
+
+    </nav>
+
+    <div class="cms-sidebar-footer">
+      <div class="cms-sidebar-user">
+        <div class="cms-user-av" id="cmsUserAv">--</div>
+        <div class="cms-user-info">
+          <div class="cms-user-name" id="cmsUserName">Admin</div>
+          <div class="cms-user-role" id="cmsUserRole">—</div>
+        </div>
+        <button class="cms-logout-btn" id="cmsLogoutBtn" title="Sair">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+      </div>
+      <a class="cms-back-intranet" href="../app.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="15 18 9 12 15 6"/></svg>
+        Voltar à Intranet
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="cms-body">
+
+    <header class="cms-header">
+      <div class="cms-header-left">
+        <button class="cms-hamburger" id="cmsMenuBtn">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="cms-breadcrumb">
+          <span class="cms-breadcrumb-root">INOV CMS</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><polyline points="9 18 15 12 9 6"/></svg>
+          <span id="cmsBreadcrumb">Dashboard</span>
+        </div>
+      </div>
+      <div class="cms-header-center">
+        <div class="cms-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="cmsSearchInput" placeholder="Pesquisar conteúdo…" />
+        </div>
+      </div>
+      <div class="cms-header-right">
+        <button class="cms-hdr-btn" onclick="cmsNavigate('news')" title="Publicar notícia">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <div class="cms-header-sep"></div>
+        <div class="cms-header-avatar" id="cmsHeaderAv" onclick="cmsNavigate('settings')">--</div>
+      </div>
+    </header>
+
+    <main class="cms-main" id="cmsMain">
+      <!-- Dynamic content rendered by admin-app.js -->
+    </main>
+
+  </div>
+
+</div>
+
+<!-- MODAL OVERLAY -->
+<div class="cms-modal-overlay" id="cmsModal"></div>
+
+<!-- TOAST -->
+<div class="cms-toast-container" id="cmsToast"></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/auth.js"></script>
+<script src="js/admin-app.js"></script>
+
+</body>
+</html>

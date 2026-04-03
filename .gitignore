@@ -1,0 +1,26 @@
+# ── Ambiente e credenciais ──────────────────────────
+backend/.env
+backend/config/local.php
+
+# ── Uploads (ficheiros de utilizadores — não versionados) ──
+backend/storage/uploads/*
+!backend/storage/uploads/.gitkeep
+
+# ── Logs ────────────────────────────────────────────
+backend/logs/*.log
+backend/logs/errors/
+
+# ── Ficheiros de debug ───────────────────────────────
+debug.html
+debug2.html
+
+# ── OS / Editor ─────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Node (caso seja usado) ───────────────────────────
+node_modules/

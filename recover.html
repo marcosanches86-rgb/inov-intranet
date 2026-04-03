@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recuperar Password — INOV Intranet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body data-page="recover">
+
+  <div class="auth-wrapper">
+    <div class="auth-card">
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <div class="auth-logo-mark">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="10" height="10" rx="2"/>
+            <rect x="18" y="4" width="10" height="10" rx="2" opacity="0.6"/>
+            <rect x="4" y="18" width="10" height="10" rx="2" opacity="0.6"/>
+            <rect x="18" y="18" width="10" height="10" rx="2"/>
+          </svg>
+        </div>
+        <div class="auth-logo-name">INOV Holding</div>
+        <div class="auth-logo-sub">Intranet Corporativa</div>
+      </div>
+
+      <!-- Heading -->
+      <div class="auth-heading">
+        <h1>Recuperar Password</h1>
+        <p>Introduza o seu email corporativo e enviaremos um link de recuperação</p>
+      </div>
+
+      <!-- Alert -->
+      <div class="auth-alert" id="recoverAlert"></div>
+
+      <!-- Form -->
+      <form id="recoverForm" novalidate>
+
+        <div class="form-group">
+          <label for="recoverEmail">Email Corporativo</label>
+          <div class="input-icon-wrap">
+            <span class="i-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span>
+            <input type="email" id="recoverEmail" placeholder="utilizador@inov.ao" autocomplete="email" required />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-auth">Enviar Link de Recuperação</button>
+
+      </form>
+
+      <div class="auth-footer">
+        Lembrou-se da password? <a href="index.html">Entrar</a>
+      </div>
+
+    </div>
+
+    <div class="auth-back">
+      <a href="index.html">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Voltar ao Login
+      </a>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

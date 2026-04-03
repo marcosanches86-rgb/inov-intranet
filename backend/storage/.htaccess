@@ -1,0 +1,4 @@
+# ================================================================
+#  /storage — Deny PHP execution and direct directory listing
+# ================================================================
+Options -Indexes -ExecCGI

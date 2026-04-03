@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INOV Holding — Intranet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css" />
+  <style>
+    /* Supplement styles not covered by app.css */
+    .sidebar-logout {
+      background: none; border: none;
+      color: rgba(255,255,255,0.2);
+      padding: 4px; border-radius: 6px;
+      margin-left: auto; flex-shrink: 0;
+      transition: color .15s, background .15s;
+    }
+    .sidebar-logout:hover { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); }
+    .nav-badge-gold {
+      background: var(--gold); color: var(--navy);
+      font-size: .62rem; font-weight: 800;
+      padding: 1px 6px; border-radius: 20px;
+      margin-left: auto; line-height: 1.5;
+    }
+    .notif-badge {
+      position: absolute; top: 4px; right: 4px;
+      min-width: 16px; height: 16px;
+      background: var(--red); color: white;
+      font-size: .6rem; font-weight: 800;
+      border-radius: 20px; padding: 0 4px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid white;
+      line-height: 1;
+    }
+    .hamburger {
+      display: none; flex-direction: column; gap: 4px;
+      background: none; border: none; padding: 6px;
+      color: var(--text-2); border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .hamburger span { display: block; width: 20px; height: 2px; background: currentColor; border-radius: 2px; }
+    .hamburger:hover { background: var(--surface); }
+    @media (max-width: 900px) { .hamburger { display: flex; } }
+    .header-breadcrumb-home { font-weight: 600; color: var(--text-2); }
+    .header-search-input { width:100%; }
+    #toastContainer { pointer-events: none; }
+    #toastContainer .toast { pointer-events: auto; }
+  </style>
+</head>
+<body>
+
+<!-- Loader overlay — visível durante o carregamento dos dados da API -->
+<div id="appLoader" style="display:none;position:fixed;inset:0;background:#f8fafc;z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
+  <div style="width:40px;height:40px;border:3px solid #e2e8f0;border-top-color:#0C1A35;border-radius:50%;animation:spin .8s linear infinite;"></div>
+  <div style="font-size:0.85rem;color:#64748b;font-family:Inter,sans-serif;">A carregar intranet…</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<!-- ============================================================
+     SHELL
+     ============================================================ -->
+<div class="inov-shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Brand / Logo -->
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 32 32" fill="currentColor" width="20" height="20">
+            <rect x="3" y="3"   width="11" height="11" rx="2.5"/>
+            <rect x="18" y="3"  width="11" height="11" rx="2.5" opacity="0.6"/>
+            <rect x="3" y="18"  width="11" height="11" rx="2.5" opacity="0.6"/>
+            <rect x="18" y="18" width="11" height="11" rx="2.5"/>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <strong>INOV Holding</strong>
+          <span>Intranet Corporativa</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+
+      <div class="nav-section-label">Principal</div>
+
+      <a class="nav-item active" data-page="dashboard"
+         href="javascript:void(0)" onclick="navigate('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="nav-item" data-page="group"
+         href="javascript:void(0)" onclick="navigate('group')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <span>Grupo INOV</span>
+      </a>
+
+      <a class="nav-item" data-page="sobre"
+         href="javascript:void(0)" onclick="navigate('sobre')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <span>Sobre Nós</span>
+      </a>
+
+      <a class="nav-item" data-page="companies"
+         href="javascript:void(0)" onclick="navigate('companies')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Empresas</span>
+      </a>
+
+      <div class="nav-section-label" style="margin-top:16px;">Conteúdo</div>
+
+      <a class="nav-item" data-page="news"
+         href="javascript:void(0)" onclick="navigate('news')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
+          <path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/>
+        </svg>
+        <span>Notícias</span>
+        <span class="nav-badge" id="badgeNews" style="display:none;"></span>
+      </a>
+
+      <a class="nav-item" data-page="comunicados"
+         href="javascript:void(0)" onclick="navigate('comunicados')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <path d="m3 11 19-9-9 19-2-8-8-2z"/>
+        </svg>
+        <span>Comunicados</span>
+        <span class="nav-badge-gold" id="badgeComunicados" style="display:none;"></span>
+      </a>
+
+      <a class="nav-item" data-page="docs"
+         href="javascript:void(0)" onclick="navigate('docs')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        <span>Documentos</span>
+      </a>
+
+      <a class="nav-item" data-page="brands"
+         href="javascript:void(0)" onclick="navigate('brands')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        <span>Marca &amp; Brand</span>
+      </a>
+
+      <a class="nav-item" data-page="gallery"
+         href="javascript:void(0)" onclick="navigate('gallery')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <span>Galeria</span>
+      </a>
+
+      <div class="nav-section-label" style="margin-top:16px;">Conta</div>
+
+      <a class="nav-item" data-page="profile"
+         href="javascript:void(0)" onclick="navigate('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>O Meu Perfil</span>
+      </a>
+
+      <!-- Admin only: hidden by JS for non-admins -->
+      <a class="nav-item" data-page="admin" data-admin-only
+         href="javascript:void(0)" onclick="navigate('admin')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span>Administração</span>
+      </a>
+
+      <!-- Confidencial — somente admin -->
+      <a class="nav-item" data-page="confidencial" data-admin-only
+         href="javascript:void(0)" onclick="navigate('confidencial')"
+         style="color:rgba(220,38,38,0.7);margin-top:4px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span>Confidencial</span>
+      </a>
+
+    </nav>
+
+    <!-- Sidebar footer: current user -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar-sm" id="sidebarUserAv">--</div>
+        <div class="sidebar-user-info">
+          <div class="name" id="sidebarUserName">Utilizador</div>
+          <div class="role" id="sidebarUserRole">—</div>
+        </div>
+        <button class="sidebar-logout" id="logoutBtn" title="Terminar sessão">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- Mobile sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ===== MAIN AREA ===== -->
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;">
+
+    <!-- Header -->
+    <header class="header">
+
+      <!-- Hamburger (mobile) -->
+      <button class="hamburger header-menu-btn" id="menuBtn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <!-- Breadcrumb -->
+      <div class="header-breadcrumb">
+        <span class="header-breadcrumb-home">INOV</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11" style="color:var(--border)">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+        <span class="crumb-current" id="breadcrumb">Dashboard</span>
+      </div>
+
+      <!-- Search -->
+      <div class="header-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="search" id="headerSearchInput"
+               placeholder="Pesquisar notícias, documentos, empresas…" />
+      </div>
+
+      <!-- Right actions -->
+      <div class="header-actions">
+        <button class="hdr-btn" id="notifBtn" title="Comunicados" style="position:relative;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-badge" id="notifBadge" style="display:none;"></span>
+          <span class="notif-dot" id="notifDot" style="display:none;"></span>
+        </button>
+        <div class="header-avatar" id="headerAvatar"
+             onclick="navigate('profile')" title="Ver perfil">--</div>
+      </div>
+
+    </header>
+
+    <!-- Page container -->
+    <main class="main-content">
+
+      <div class="page active" id="page-dashboard"></div>
+      <div class="page" id="page-group"></div>
+      <div class="page" id="page-companies"></div>
+      <div class="page" id="page-news"></div>
+      <div class="page" id="page-comunicados"></div>
+      <div class="page" id="page-docs"></div>
+      <div class="page" id="page-brands"></div>
+      <div class="page" id="page-gallery"></div>
+      <div class="page" id="page-profile"></div>
+      <div class="page" id="page-admin"></div>
+
+      <!-- Dynamic page: reused for company & news detail -->
+      <div class="page" id="page-dynamic"></div>
+
+      <!-- Sobre Nós -->
+      <div class="page" id="page-sobre"></div>
+
+      <!-- Confidencial — admin only -->
+      <div class="page" id="page-confidencial"></div>
+
+    </main>
+  </div>
+
+</div><!-- /.inov-shell -->
+
+<!-- ============================================================
+     TOAST CONTAINER
+     ============================================================ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ============================================================
+     LIGHTBOX — app.js uses id="lightbox" + adds class "open"
+     ============================================================ -->
+<div class="lightbox" id="lightbox"></div>
+
+<!-- ============================================================
+     MODAL OVERLAY — app.js injects .modal HTML here + adds "open"
+     ============================================================ -->
+<div class="modal-overlay" id="modalOverlay"></div>
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script src="js/data.js?v=2"></script>
+<script src="js/api.js?v=2"></script>
+<script src="js/auth.js?v=2"></script>
+<script src="js/loader.js?v=2"></script>
+<script src="js/app.js?v=4"></script>
+<script src="js/admin.js?v=5"></script>
+
+</body>
+</html>
