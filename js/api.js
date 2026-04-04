@@ -6,8 +6,14 @@
 // URL relativa — funciona em localhost e em produção sem alterações
 const API_BASE = '/backend/api';
 
+// Timeout padrão para todos os pedidos (ms)
+const API_TIMEOUT_MS = 15000;
+
 // Token CSRF em memória (reposto após cada login)
 let _csrfToken = localStorage.getItem('inov_csrf') || null;
+
+// Flag para evitar múltiplos redirects simultâneos por sessão expirada
+let _sessionExpired = false;
 
 const api = {
 
@@ -20,13 +26,39 @@ const api = {
     const options = { method, credentials: 'include', headers };
     if (data) options.body = isFormData ? data : JSON.stringify(data);
 
+    // Timeout via AbortController
+    const controller = new AbortController();
+    const timeoutId  = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+    options.signal   = controller.signal;
+
     let res, json;
     try {
-      res  = await fetch(`${API_BASE}${endpoint}`, options);
+      res = await fetch(`${API_BASE}${endpoint}`, options);
+      clearTimeout(timeoutId);
       json = await res.json();
     } catch (err) {
+      clearTimeout(timeoutId);
+      if (err.name === 'AbortError') {
+        console.warn('[API] Timeout:', endpoint);
+        return { success: false, message: 'O servidor demorou demasiado a responder. Tente novamente.' };
+      }
       console.error('[API] Erro de rede:', err);
       return { success: false, message: 'Sem ligação ao servidor.' };
+    }
+
+    // ── Sessão expirada (401) ───────────────────────────────────
+    if (res.status === 401 && !endpoint.includes('/auth/')) {
+      if (!_sessionExpired) {
+        _sessionExpired = true;
+        _csrfToken = null;
+        localStorage.removeItem('inov_csrf');
+        console.warn('[API] Sessão expirada — a redirecionar para login.');
+        // Pequeno delay para que o pedido em curso possa terminar graciosamente
+        setTimeout(() => {
+          window.location.href = '/?session=expired';
+        }, 300);
+      }
+      return { success: false, message: 'Sessão expirada. A redirecionar para o login…' };
     }
 
     // Guardar CSRF token sempre que o servidor o enviar
@@ -46,7 +78,8 @@ const api = {
 
   // ── Auth ──────────────────────────────────────────────────────
   login(email, password) {
-    _csrfToken = null;
+    _csrfToken     = null;
+    _sessionExpired = false;
     localStorage.removeItem('inov_csrf');
     return api.post('/auth/login', { email, password });
   },
@@ -112,12 +145,16 @@ const api = {
   createUser(d)          { return api.post('/users', d); },
   updateUser(id, d)      { return api.put(`/users/${id}`, d); },
   deleteUser(id)         { return api.delete(`/users/${id}`); },
-  updateUserRole(id, role)   { return api.put(`/users/${id}/role`, { role }); },
+  updateUserRole(id, role)     { return api.put(`/users/${id}/role`, { role }); },
   updateUserStatus(id, status) { return api.put(`/users/${id}/status`, { status }); },
 
   // ── Activity ──────────────────────────────────────────────────
   activityFeed(params = {}) { return api.get('/dashboard/feed' + buildQuery(params)); },
   adminStats()              { return api.get('/dashboard/stats'); },
+
+  // ── System ────────────────────────────────────────────────────
+  health()  { return api.get('/health'); },
+  version() { return api.get('/version'); },
 };
 
 // ── Query string helper ────────────────────────────────────────
@@ -130,5 +167,5 @@ function buildQuery(params) {
 }
 
 // ── Expose globally ────────────────────────────────────────────
-window.api       = api;
+window.api        = api;
 window.buildQuery = buildQuery;

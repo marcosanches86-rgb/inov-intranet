@@ -12,7 +12,8 @@ backend/storage/uploads/logos/*
 
 # ── Logs ────────────────────────────────────────────
 backend/logs/*.log
-backend/logs/errors/
+backend/logs/errors/*.log
+# Manter .gitkeep para garantir que os diretórios existem no servidor
 
 # ── Ficheiros de debug ───────────────────────────────
 debug.html

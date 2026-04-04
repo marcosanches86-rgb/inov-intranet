@@ -64,6 +64,14 @@ function initLogin() {
 
   const form    = document.getElementById('loginForm');
   const alert   = document.getElementById('loginAlert');
+
+  // Mostrar aviso se a sessão expirou (redireccionado de api.js)
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('session') === 'expired') {
+    showAlert(alert, 'error', 'A sua sessão expirou. Por favor inicie sessão novamente.');
+    // Limpar parâmetro da URL sem recarregar a página
+    history.replaceState(null, '', window.location.pathname);
+  }
   const passEl  = document.getElementById('loginPass');
   const toggleBtn = document.getElementById('togglePass');
 

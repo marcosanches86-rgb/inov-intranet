@@ -76,6 +76,8 @@ header('X-Frame-Options: DENY');
 header('X-XSS-Protection: 1; mode=block');
 header('Referrer-Policy: strict-origin-when-cross-origin');
 header('Content-Type: application/json; charset=UTF-8');
+// HSTS — tells browsers to always use HTTPS for 1 year (only effective over HTTPS)
+header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
 
 // Remove fingerprinting headers
 header_remove('X-Powered-By');
@@ -110,6 +112,7 @@ set_exception_handler(function (\Throwable $e) {
     error_log('[EXCEPTION] ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
     if (APP_DEBUG) {
         Response::serverError($e->getMessage() . ' [' . $e->getFile() . ':' . $e->getLine() . ']');
+        return; // Evita dupla chamada a serverError
     }
     Response::serverError();
 });
