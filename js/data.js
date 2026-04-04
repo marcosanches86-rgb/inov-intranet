@@ -421,11 +421,11 @@ const QUICK_LINKS = [
 // =============================================
 // HELPERS
 // =============================================
-function getCompany(id) { return COMPANIES.find(c => c.id === id); }
-function getNewsByCompany(id) { return NEWS.filter(n => n.companyId === id); }
-function getDocsByCompany(id) { return DOCUMENTS.filter(d => d.companyId === id); }
-function getBrandsByCompany(id) { return BRAND_ASSETS.filter(b => b.companyId === id); }
-function getGalleryByCompany(id) { return GALLERY.filter(g => g.companyId === id); }
+function getCompany(id) { return COMPANIES.find(c => String(c.id) === String(id)); }
+function getNewsByCompany(id) { return NEWS.filter(n => String(n.companyId ?? n.company_id) === String(id)); }
+function getDocsByCompany(id) { return DOCUMENTS.filter(d => String(d.companyId ?? d.company_id) === String(id)); }
+function getBrandsByCompany(id) { return BRAND_ASSETS.filter(b => String(b.companyId ?? b.company_id) === String(id)); }
+function getGalleryByCompany(id) { return GALLERY.filter(g => String(g.companyId ?? g.company_id) === String(id)); }
 function formatDate(dateStr) {
   const d = new Date(dateStr);
   return d.toLocaleDateString('pt-AO', { day:'2-digit', month:'short', year:'numeric' });

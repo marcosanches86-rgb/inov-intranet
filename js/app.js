@@ -184,7 +184,7 @@ function renderDashboard() {
     </div>
 
     <div class="stats-row">
-      <div class="stat-card">
+      <div class="stat-card" onclick="navigate('news')" style="cursor:pointer;">
         <div class="stat-card-top">
           <div class="stat-icon blue">${ICONS.newspaper}</div>
           <span class="stat-change up">↑ 12%</span>
@@ -192,7 +192,7 @@ function renderDashboard() {
         <div class="stat-value">${NEWS.length}</div>
         <div class="stat-label">Notícias publicadas</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" onclick="navigate('comunicados')" style="cursor:pointer;">
         <div class="stat-card-top">
           <div class="stat-icon amber">${ICONS.megaphone}</div>
           ${unread > 0 ? `<span class="stat-change" style="color:var(--red)">${unread} novos</span>` : ''}
@@ -200,14 +200,14 @@ function renderDashboard() {
         <div class="stat-value">${COMUNICADOS.length}</div>
         <div class="stat-label">Comunicados internos</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" onclick="navigate('docs')" style="cursor:pointer;">
         <div class="stat-card-top">
           <div class="stat-icon green">${ICONS.folder}</div>
         </div>
         <div class="stat-value">${DOCUMENTS.length}</div>
         <div class="stat-label">Documentos na biblioteca</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" onclick="navigate('companies')" style="cursor:pointer;">
         <div class="stat-card-top">
           <div class="stat-icon navy">${ICONS.building}</div>
         </div>
@@ -399,10 +399,13 @@ function renderCompanies() {
 }
 
 function companyCardHtml(c) {
+  const logoHtml = c.logoPath
+    ? `<img src="${c.logoPath}" alt="${c.name}" style="max-width:70%;max-height:60px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"  /><div class="company-card-logo" style="color:${c.accentColor};display:none;">${c.shortName}</div>`
+    : `<div class="company-card-logo" style="color:${c.accentColor};">${c.shortName}</div>`;
   return `
-    <div class="company-card" onclick="navigate('company-${c.id}')">
-      <div class="company-card-cover" style="background:${c.coverGradient};">
-        <div class="company-card-logo" style="color:${c.accentColor};">${c.shortName}</div>
+    <div class="company-card" onclick="navigate('company-${c.id}')" style="cursor:pointer;">
+      <div class="company-card-cover" style="background:${c.coverGradient};display:flex;align-items:center;justify-content:center;">
+        ${logoHtml}
       </div>
       <div class="company-card-body">
         <h4>${c.name}</h4>
@@ -430,7 +433,9 @@ function renderCompanyPage(id) {
     <div class="company-hero">
       <div class="company-hero-bg" style="background:${c.coverGradient};"></div>
       <div class="company-hero-overlay">
-        <div class="company-logo-lg" style="color:${c.accentColor};">${c.shortName}</div>
+        ${c.logoPath
+          ? `<img src="${c.logoPath}" alt="${c.name}" style="height:64px;max-width:140px;object-fit:contain;border-radius:12px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="company-logo-lg" style="color:${c.accentColor};display:none;">${c.shortName}</div>`
+          : `<div class="company-logo-lg" style="color:${c.accentColor};">${c.shortName}</div>`}
         <div class="company-hero-info">
           <h1>${c.name}</h1>
           <p>${c.tagline}</p>
@@ -895,7 +900,7 @@ function filterBrandsView() {
 }
 
 function brandCardHtml(b) {
-  const fileUrl  = b.url || (b.file_path ? `http://localhost/backend/storage/uploads/${b.file_path}` : null);
+  const fileUrl  = b.url || (b.file_path ? `/backend/storage/uploads/${b.file_path}` : null);
   const bgColor  = b.colorBg || b.color_bg || b.company_color || '#111827';
   const textColor = b.color  || b.company_accent || '#ffffff';
   const initials  = b.initials || (b.name||'').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
@@ -1019,7 +1024,7 @@ async function openAlbum(albumId) {
   const album = res.data;
   const items = (album.items || []).map(item => ({
     ...item,
-    url: item.file_path ? `http://localhost/backend/storage/uploads/${item.file_path}` : null,
+    url: item.file_path ? `/backend/storage/uploads/${item.file_path}` : null,
   }));
 
   let current = 0;

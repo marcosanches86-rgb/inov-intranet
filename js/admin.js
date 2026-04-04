@@ -1145,7 +1145,7 @@ function renderBrandsAdminTable() {
               <td style="font-size:0.78rem;color:var(--text-3);">${escHtml(b.format||b.file_type||'—')}</td>
               <td style="font-size:0.78rem;color:var(--text-3);">${formatDate(b.date||b.created_at)}</td>
               <td><div style="display:flex;gap:4px;">
-                ${b.url||b.file_path ? `<a href="${b.url||'http://localhost/backend/storage/uploads/'+b.file_path}" target="_blank" class="btn btn-ghost btn-sm btn-icon" title="Download">${ICONS.download}</a>` : ''}
+                ${b.url||b.file_path ? `<a href="${b.url||'/backend/storage/uploads/'+b.file_path}" target="_blank" class="btn btn-ghost btn-sm btn-icon" title="Download">${ICONS.download}</a>` : ''}
                 <button class="btn btn-danger btn-sm btn-icon" onclick="adminDeleteBrand(${b.id})" title="Eliminar">${ICONS.trash}</button>
               </div></td>
             </tr>

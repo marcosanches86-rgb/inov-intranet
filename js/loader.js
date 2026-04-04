@@ -9,10 +9,11 @@
 function normalizeNews(items) {
   return (items || []).map(n => ({
     ...n,
+    companyId: n.company_id,
     date:     n.published_at || n.created_at,
     company:  n.company_name  || '',
     featured: !!n.is_featured,
-    cover:    n.cover_path    ? `http://localhost/backend/storage/uploads/${n.cover_path}` : null,
+    cover:    n.cover_path    ? `/backend/storage/uploads/${n.cover_path}` : null,
     body:     n.body          || n.summary || '',
     author:   n.author_name   || 'Equipa INOV',
     read_time: n.read_time    || 3,
@@ -33,6 +34,7 @@ function normalizeComunicados(items) {
 function normalizeDocuments(items) {
   return (items || []).map(d => ({
     ...d,
+    companyId:     d.company_id,
     date:          d.created_at,
     company:       d.company_name || '',
     fileType:      d.file_type    || 'pdf',
@@ -49,7 +51,9 @@ function normalizeCompanies(items) {
     ...c,
     shortName:      c.short_name    || c.name.split(' ')[0],
     accentColor:    c.accent_color  || '#C9A24C',
-    coverGradient:  makeCoverGradient(c.color || '#0C1A35'),
+    coverGradient:  c.cover_gradient || makeCoverGradient(c.color || '#0C1A35'),
+    logoPath:       c.logo_path ? `/backend/storage/uploads/${c.logo_path}` : null,
+    coverPath:      c.cover_path ? `/backend/storage/uploads/${c.cover_path}` : null,
     founded:        String(c.founded_year || c.founded || '2024'),
     employees:      String(c.employees_count || c.employees || '—'),
     location:       c.location || 'Luanda, Angola',
@@ -60,7 +64,6 @@ function normalizeCompanies(items) {
       tel:   c.phone   || '',
       web:   c.website || '',
     },
-    // keep docs/news arrays from mock if API doesn't return them
     docs: c.docs || [],
     news: c.news || [],
   }));
@@ -69,11 +72,13 @@ function normalizeCompanies(items) {
 function normalizeBrandAssets(items) {
   return (items || []).map(b => ({
     ...b,
+    companyId: b.company_id,
     date:     b.created_at,
     company:  b.company_name || '',
     format:   b.format       || b.file_type || '',
     version:  b.version      || '1.0',
-    url:      b.file_path ? `http://localhost/backend/storage/uploads/${b.file_path}` : null,
+    colorBg:  b.color_bg     || b.colorBg   || '#111827',
+    url:      b.file_path ? `/backend/storage/uploads/${b.file_path}` : null,
   }));
 }
 
@@ -84,10 +89,10 @@ function normalizeGallery(items) {
     companyId: g.company_id,
     project:   g.title        || '',
     color:     g.cover_color  || '#111827',
-    cover:     g.cover_path   ? `http://localhost/backend/storage/uploads/${g.cover_path}` : null,
+    cover:     g.cover_path   ? `/backend/storage/uploads/${g.cover_path}` : null,
     photos:    (g.items || []).map(item => ({
       ...item,
-      url: item.file_path ? `http://localhost/backend/storage/uploads/${item.file_path}` : null,
+      url: item.file_path ? `/backend/storage/uploads/${item.file_path}` : null,
     })),
   }));
 }
