@@ -44,6 +44,10 @@ function normalizeDocuments(items) {
     confidential:  !!d.is_confidential,
     path:          d.file_path || '',
     tags:          Array.isArray(d.tags) ? d.tags : [],
+    // backward-compat aliases for old mock-data field names
+    type:          d.file_type    || 'pdf',
+    desc:          d.description  || '',
+    size:          d.file_size_human || '—',
   }));
 }
 
