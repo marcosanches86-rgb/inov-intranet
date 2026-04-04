@@ -837,24 +837,28 @@ function filterDocsView() {
 }
 
 function docRowHtml(d) {
-  const c = getCompany(d.companyId);
+  const c = getCompany(d.companyId ?? d.company_id);
+  const ftype = d.fileType || d.type || d.file_type || 'pdf';
   const iconColors = { pdf:'pdf', ppt:'ppt', doc:'doc', zip:'zip', xls:'xls' };
   const docIcons   = { pdf:'📄', ppt:'📊', doc:'📝', zip:'🗜', xls:'📈' };
+  const desc = d.desc || d.description || '';
+  const size = d.size || d.fileSize || d.file_size_human || '—';
+  const dateVal = d.date || d.created_at || '';
   return `
     <tr>
       <td>
         <div class="doc-name-cell">
-          <div class="doc-icon ${iconColors[d.type] || 'doc'}">${docIcons[d.type] || '📄'}</div>
+          <div class="doc-icon ${iconColors[ftype] || 'doc'}">${docIcons[ftype] || '📄'}</div>
           <div>
             <div class="doc-name-text">${d.title}</div>
-            <div class="doc-desc">${d.desc}</div>
+            <div class="doc-desc">${desc}</div>
           </div>
         </div>
       </td>
-      <td><span class="badge badge-navy" style="font-size:0.68rem;">${c ? c.shortName : '—'}</span></td>
-      <td><span class="badge badge-gray">${d.category}</span></td>
-      <td style="color:var(--text-3);font-size:0.8rem;">${d.size}</td>
-      <td style="color:var(--text-3);font-size:0.8rem;">${formatDate(d.date)}</td>
+      <td><span class="badge badge-navy" style="font-size:0.68rem;">${c ? c.shortName : (d.company_short || d.company || '—')}</span></td>
+      <td><span class="badge badge-gray">${d.category || '—'}</span></td>
+      <td style="color:var(--text-3);font-size:0.8rem;">${size}</td>
+      <td style="color:var(--text-3);font-size:0.8rem;">${formatDate(dateVal)}</td>
       <td>
         <div style="display:flex;gap:5px;">
           <button class="btn btn-ghost btn-sm btn-icon" title="Pré-visualizar" onclick="toast('Pré-visualização: ${d.title}','')">
@@ -1845,20 +1849,21 @@ function renderConfidencial() {
           ${confDocs.map(d => {
             const iconColors = { pdf:'pdf', ppt:'ppt', doc:'doc', zip:'zip', xls:'xls' };
             const docIcons   = { pdf:'📄', ppt:'📊', doc:'📝', zip:'🗜', xls:'📈' };
+            const _ftype = d.fileType || d.type || d.file_type || 'pdf';
             return `
               <tr>
                 <td>
                   <div class="doc-name-cell">
-                    <div class="doc-icon ${iconColors[d.type] || 'doc'}">${docIcons[d.type] || '📄'}</div>
+                    <div class="doc-icon ${iconColors[_ftype] || 'doc'}">${docIcons[_ftype] || '📄'}</div>
                     <div>
                       <div class="doc-name-text">${d.title}</div>
-                      <div class="doc-desc">${d.desc}</div>
+                      <div class="doc-desc">${d.description || d.desc || ''}</div>
                     </div>
                   </div>
                 </td>
                 <td><span class="badge" style="background:var(--red-pale);color:var(--red);border:1px solid #FECACA;font-size:0.68rem;">Confidencial</span></td>
-                <td style="color:var(--text-3);font-size:0.8rem;">${d.size}</td>
-                <td style="color:var(--text-3);font-size:0.8rem;">${formatDate(d.date)}</td>
+                <td style="color:var(--text-3);font-size:0.8rem;">${d.fileSize || d.size || d.file_size_human || '—'}</td>
+                <td style="color:var(--text-3);font-size:0.8rem;">${formatDate(d.date || d.created_at)}</td>
                 <td>
                   <div style="display:flex;gap:5px;">
                     <button class="btn btn-ghost btn-sm btn-icon" title="Pré-visualizar" onclick="toast('Pré-visualização: ${d.title}','')">
