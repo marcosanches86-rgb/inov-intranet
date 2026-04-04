@@ -3,8 +3,8 @@
    Full SPA with 8 management modules
    ============================================= */
 
-let cmsUser = null;
-let cmsCurrentModule = 'dashboard';
+var cmsUser = null;           // var → fica em window.cmsUser (acessível pelo bridge)
+var cmsCurrentModule = null;  // var → acessível externamente
 
 // =============================================
 // BOOT
