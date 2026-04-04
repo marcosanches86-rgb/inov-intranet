@@ -5,6 +5,10 @@ backend/config/local.php
 # ── Uploads (ficheiros de utilizadores — não versionados) ──
 backend/storage/uploads/*
 !backend/storage/uploads/.gitkeep
+!backend/storage/uploads/logos/
+backend/storage/uploads/logos/*
+!backend/storage/uploads/logos/placeholder-*.svg
+!backend/storage/uploads/logos/placeholder-*.pdf
 
 # ── Logs ────────────────────────────────────────────
 backend/logs/*.log
