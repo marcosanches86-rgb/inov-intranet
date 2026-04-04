@@ -1,11 +1,10 @@
 <?php
 /**
- * INOV Intranet — One-time placeholder asset generator
+ * INOV Intranet — One-time placeholder asset generator + path discovery
  * Run once: https://intranet.inov.ao/backend/setup-assets.php?key=INOV2026setup
  * DELETE this file after running!
  */
 
-// Simple security key
 if (($_GET['key'] ?? '') !== 'INOV2026setup') {
     http_response_code(403);
     die(json_encode(['error' => 'Forbidden']));
@@ -13,27 +12,69 @@ if (($_GET['key'] ?? '') !== 'INOV2026setup') {
 
 header('Content-Type: application/json');
 
-$baseDir = __DIR__ . '/storage/uploads';
-$logosDir = $baseDir . '/logos';
-$coversDir = $baseDir . '/covers';
-$docsDir = $baseDir . '/documents';
-$galleryDir = $baseDir . '/gallery';
-
 $created = [];
-$errors = [];
+$errors  = [];
+$info    = [];
 
-// Create directories
-foreach ([$logosDir, $coversDir, $docsDir, $galleryDir] as $dir) {
+// ── Path discovery ──────────────────────────────────────────────────────────
+$scriptDir  = __DIR__;                         // e.g. /home/u.../public_html/intranet-sync/backend
+$rootParts  = explode('/', rtrim($scriptDir, '/'));
+
+// Pop 'backend', leaving the install dir
+array_pop($rootParts);
+$installDir = implode('/', $rootParts);        // e.g. /home/u.../public_html/intranet-sync
+$publicHtml = dirname($installDir);            // e.g. /home/u.../public_html
+
+$info['script_dir']  = $scriptDir;
+$info['install_dir'] = $installDir;
+$info['public_html'] = $publicHtml;
+
+// Candidate intranet backend paths (try several names Hostinger might use)
+$candidates = [
+    $installDir . '/backend/storage/uploads',          // this repo itself (intranet-sync)
+    $publicHtml . '/intranet/backend/storage/uploads', // original git deploy path
+    $publicHtml . '/intranet.inov.ao/backend/storage/uploads',
+    $publicHtml . '/public_html/intranet/backend/storage/uploads',
+];
+
+$info['candidates'] = $candidates;
+$info['candidate_exists'] = [];
+
+$targetBase = null;
+foreach ($candidates as $c) {
+    $parentOk = is_dir(dirname(dirname($c)));   // storage dir's grandparent = backend
+    $info['candidate_exists'][$c] = [
+        'grandparent_exists' => $parentOk,
+        'storage_exists'     => is_dir(dirname($c)),
+        'uploads_exists'     => is_dir($c),
+    ];
+    if ($parentOk && $targetBase === null) {
+        $targetBase = $c;  // use the first viable candidate
+    }
+}
+
+if ($targetBase === null) {
+    // Fallback: use this repo's own storage (will at least tell us the path)
+    $targetBase = $installDir . '/backend/storage/uploads';
+}
+
+$info['chosen_target'] = $targetBase;
+
+// ── Create directories ──────────────────────────────────────────────────────
+foreach (['logos', 'covers', 'documents', 'gallery'] as $sub) {
+    $dir = $targetBase . '/' . $sub;
     if (!is_dir($dir)) {
         if (mkdir($dir, 0755, true)) {
             $created[] = "dir: $dir";
         } else {
-            $errors[] = "Failed to create dir: $dir";
+            $errors[] = "mkdir failed: $dir";
         }
     }
 }
 
-// Branded SVG placeholder logos
+$logosDir = $targetBase . '/logos';
+
+// ── Branded SVG logos ───────────────────────────────────────────────────────
 $assets = [
     ['placeholder-01.svg', 'INOV', '#C9A24C', '#0C1A35', 'INOV Holding'],
     ['placeholder-02.svg', 'INOV', '#FFFFFF', '#0C1A35', 'INOV Holding'],
@@ -59,31 +100,25 @@ foreach ($assets as [$fname, $initials, $textColor, $bgColor, $label]) {
 SVG;
     $path = $logosDir . '/' . $fname;
     if (file_put_contents($path, $svg) !== false) {
-        $created[] = "svg: $fname";
+        $created[] = "svg: $fname → $path";
     } else {
-        $errors[] = "Failed: $fname";
+        $errors[] = "write failed: $path";
     }
 }
 
-// Minimal PDF for placeholder-04
+// ── Minimal PDF placeholder ─────────────────────────────────────────────────
 $pdf = "%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]>>endobj\nxref\n0 4\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \ntrailer<</Root 1 0 R/Size 4>>\nstartxref\n190\n%%EOF";
 $pdfPath = $logosDir . '/placeholder-04.pdf';
 if (file_put_contents($pdfPath, $pdf) !== false) {
-    $created[] = "pdf: placeholder-04.pdf";
+    $created[] = "pdf: placeholder-04.pdf → $pdfPath";
 } else {
-    $errors[] = "Failed: placeholder-04.pdf";
-}
-
-// Create .htaccess to allow static file serving if not present
-$htaccess = $baseDir . '/.htaccess';
-if (!file_exists($htaccess)) {
-    file_put_contents($htaccess, "Options -Indexes\n");
-    $created[] = ".htaccess";
+    $errors[] = "write failed: $pdfPath";
 }
 
 echo json_encode([
     'status'  => count($errors) === 0 ? 'ok' : 'partial',
+    'info'    => $info,
     'created' => $created,
     'errors'  => $errors,
-    'message' => 'Done! DELETE this file: backend/setup-assets.php',
+    'next'    => 'DELETE backend/setup-assets.php after confirming assets work',
 ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
