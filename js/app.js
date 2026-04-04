@@ -1,6 +1,7 @@
 /* =============================================
    INOV INTRANET — MAIN APPLICATION
    SPA Router + All View Renderers
+   v2.1 — 2026-04-04
    ============================================= */
 
 let currentUser = null;

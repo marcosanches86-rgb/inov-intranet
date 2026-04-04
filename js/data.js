@@ -1,6 +1,7 @@
 /* =============================================
    INOV INTRANET — MOCK DATA
    All simulated content for the platform
+   v2.1 — 2026-04-04
    ============================================= */
 
 // Versão dos utilizadores seed — incrementar para forçar re-seed

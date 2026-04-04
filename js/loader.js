@@ -2,6 +2,7 @@
    INOV INTRANET — DATA LOADER
    Carrega dados reais da API e popula os globals
    que o app.js usa (NEWS, COMUNICADOS, etc.)
+   v2.1 — 2026-04-04
    ============================================= */
 
 // ── Normalização de dados da API → formato do frontend ─────────
