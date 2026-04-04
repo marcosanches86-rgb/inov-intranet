@@ -1111,6 +1111,9 @@ function renderCMSDocs(el, tab = 'all') {
 }
 
 function docFormHTML(d = {}) {
+  const isEdit = !!d.id;
+  const existingFile = d.originalName || d.file || '';
+  const existingSize = d.fileSize || d.size || '';
   return `
     <div class="cms-form-row">
       <label class="cms-label">Título do documento <span>*</span></label>
@@ -1118,13 +1121,13 @@ function docFormHTML(d = {}) {
     </div>
     <div class="cms-form-row">
       <label class="cms-label">Descrição</label>
-      <input class="cms-input" id="df_desc" placeholder="Breve descrição do conteúdo" value="${d.desc||''}" />
+      <input class="cms-input" id="df_desc" placeholder="Breve descrição do conteúdo" value="${d.desc||d.description||''}" />
     </div>
     <div class="cms-form-row row-2">
       <div>
         <label class="cms-label">Empresa</label>
         <select class="cms-select" id="df_company">
-          ${COMPANIES.map(c => `<option value="${c.id}" ${d.companyId===c.id?'selected':''}>${c.name}</option>`).join('')}
+          ${COMPANIES.map(c => `<option value="${c.id}" ${(d.companyId||d.company_id)==c.id?'selected':''}>${c.name}</option>`).join('')}
         </select>
       </div>
       <div>
@@ -1132,37 +1135,28 @@ function docFormHTML(d = {}) {
         <input class="cms-input" id="df_cat" placeholder="Ex: Governança, RH, Comercial" value="${d.category||''}" />
       </div>
     </div>
-    <div class="cms-form-row row-2">
-      <div>
-        <label class="cms-label">Tipo de ficheiro</label>
-        <select class="cms-select" id="df_type">
-          <option value="pdf" ${d.type==='pdf'?'selected':''}>PDF</option>
-          <option value="doc" ${d.type==='doc'?'selected':''}>DOC / DOCX</option>
-          <option value="xls" ${d.type==='xls'?'selected':''}>XLS / XLSX</option>
-          <option value="ppt" ${d.type==='ppt'?'selected':''}>PPT / PPTX</option>
-          <option value="zip" ${d.type==='zip'?'selected':''}>ZIP</option>
-        </select>
-      </div>
-      <div>
-        <label class="cms-label">Tamanho (ex: 2.4 MB)</label>
-        <input class="cms-input" id="df_size" placeholder="Ex: 2.4 MB" value="${d.size||''}" />
-      </div>
-    </div>
     <div class="cms-form-row">
-      <label class="cms-label">Nome do ficheiro</label>
-      <input class="cms-input" id="df_file" placeholder="Ex: relatorio-2026.pdf" value="${d.file||''}" />
-      <div class="cms-upload-zone" style="margin-top:8px;" onclick="cmsToast('Upload simulado — integre com backend para ficheiros reais','')">
-        ${CI.upload}
-        <div style="margin-top:4px;">Clique para simular upload de ficheiro</div>
-        <div style="font-size:.7rem;margin-top:2px;color:var(--txt-4);">PDF, DOC, XLS, PPT, ZIP</div>
-      </div>
+      <label class="cms-label">${isEdit ? 'Ficheiro actual' : 'Ficheiro <span>*</span>'}</label>
+      ${isEdit
+        ? `<div style="padding:10px 12px;background:var(--bg-2);border-radius:8px;font-size:.82rem;color:var(--txt-2);">
+             📄 ${existingFile}${existingSize ? ' · ' + existingSize : ''}
+           </div>`
+        : `<label class="cms-upload-zone" for="df_file_input" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;">
+             ${CI.upload}
+             <span id="df_file_label" style="font-size:.82rem;">Clique para seleccionar ficheiro</span>
+             <span style="font-size:.7rem;color:var(--txt-4);">PDF, DOC, XLS, PPT, ZIP — máx. 20 MB</span>
+             <input type="file" id="df_file_input" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip"
+               style="display:none;"
+               onchange="document.getElementById('df_file_label').textContent = this.files[0]?.name || 'Clique para seleccionar ficheiro'" />
+           </label>`
+      }
     </div>
     <div class="cms-toggle-row">
       <div>
         <div class="cms-toggle-label">🔒 Documento confidencial</div>
         <div class="cms-toggle-sub">Visível apenas para administradores</div>
       </div>
-      <button class="cms-toggle ${d.confidencial?'on':''}" id="df_conf" onclick="this.classList.toggle('on')"></button>
+      <button class="cms-toggle ${d.confidencial||d.isConfidential?'on':''}" id="df_conf" onclick="this.classList.toggle('on')"></button>
     </div>
   `;
 }
