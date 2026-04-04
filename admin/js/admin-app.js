@@ -10,6 +10,12 @@ let cmsCurrentModule = 'dashboard';
 // BOOT
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Se o admin-bridge.js estiver carregado, usa o boot via API
+  if (typeof window._adminAPIBoot === 'function') {
+    window._adminAPIBoot();
+    return;
+  }
+  // Fallback: modo demo/localStorage
   cmsUser = requireAuth();
   if (!cmsUser) return;
   if (!['admin','editor'].includes(cmsUser.role)) {
