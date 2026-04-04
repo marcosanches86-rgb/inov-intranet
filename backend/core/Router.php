@@ -74,18 +74,22 @@ class Router
         // Adjust BASE_PREFIX in app.php if needed
         $path = preg_replace('#^/backend#', '', $path) ?: '/';
 
+        $pathMatchedOnDifferentMethod = false;
+
         foreach ($this->routes as $route) {
-            // Method must match
-            if ($route['method'] !== $method) {
+            // Check if path matches (regardless of method) — for 405 detection
+            if (!preg_match($route['pattern'], $path)) {
                 continue;
             }
 
-            // Path must match pattern
-            if (!preg_match($route['pattern'], $path, $matches)) {
+            // Path matches — method must also match
+            if ($route['method'] !== $method) {
+                $pathMatchedOnDifferentMethod = true;
                 continue;
             }
 
             // Extract named URL params (skip integer keys from preg_match)
+            preg_match($route['pattern'], $path, $matches);
             $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
             $request->setParams($params);
 
@@ -113,7 +117,12 @@ class Router
             return;
         }
 
-        // No route matched
+        // Path matched but wrong HTTP method → 405
+        if ($pathMatchedOnDifferentMethod) {
+            Response::methodNotAllowed();
+        }
+
+        // No route matched at all → 404
         Response::notFound('Endpoint não encontrado: ' . $method . ' ' . $path);
     }
 }
