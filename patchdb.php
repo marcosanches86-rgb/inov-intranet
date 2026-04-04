@@ -40,7 +40,19 @@ if ($env) {
     }
 }
 
-$results = ['env' => $env ?? 'NOT FOUND', 'updates' => [], 'dirs' => [], 'errors' => []];
+$results = ['env' => $env ?? 'NOT FOUND', 'updates' => [], 'dirs' => [], 'env_copy' => null, 'errors' => []];
+
+// ── Copy .env to intranet-sync/backend/ (prep for subdomain switch) ─────────
+$targetEnv = $here . '/backend/.env';
+if ($env && !file_exists($targetEnv) && $env !== $targetEnv) {
+    if (copy($env, $targetEnv)) {
+        $results['env_copy'] = "copied: {$env} → {$targetEnv}";
+    } else {
+        $results['env_copy'] = "copy failed (check permissions)";
+    }
+} elseif (file_exists($targetEnv)) {
+    $results['env_copy'] = "already exists: {$targetEnv}";
+}
 
 // ── DB connection ──────────────────────────────────────────────────────────
 try {
