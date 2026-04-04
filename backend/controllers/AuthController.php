@@ -11,7 +11,7 @@ declare(strict_types=1);
 //    GET   /api/auth/me                → me()
 //    POST  /api/auth/forgot-password   → forgotPassword()
 //    POST  /api/auth/reset-password    → resetPassword()
-//    POST  /api/auth/change-password   → changePassword()
+//    PUT   /api/auth/change-password   → changePassword()
 // ================================================================
 
 class AuthController
@@ -174,8 +174,12 @@ class AuthController
             'ip' => $ip,
         ]);
 
-        // Clean up expired password resets (housekeeping)
+        // Housekeeping (3% probabilidade — fire-and-forget)
         $this->resets->cleanExpired();
+        if (random_int(1, 100) <= 3) {
+            ActivityLog::purgeOld(90);       // logs com +90 dias
+            ActivityLog::purgeOldAttempts(30); // tentativas de login com +30 dias
+        }
 
         $safe = User::sanitize($user);
 
@@ -319,7 +323,7 @@ class AuthController
     }
 
 
-    // ── POST /api/auth/change-password ────────────────────────────
+    // ── PUT /api/auth/change-password ─────────────────────────────
     // Requires: AuthMiddleware + CsrfMiddleware
     public function changePassword(Request $request): void
     {

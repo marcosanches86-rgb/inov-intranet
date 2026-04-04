@@ -146,4 +146,51 @@ class ActivityLog extends BaseModel
             [':lim' => $limit]
         );
     }
+
+    /**
+     * Purge activity logs older than $days days.
+     * Call occasionally (e.g. 1% of requests) to prevent table bloat.
+     * Returns number of rows deleted.
+     */
+    public static function purgeOld(int $days = 90): int
+    {
+        try {
+            $stmt = Database::getInstance()->prepare(
+                "DELETE FROM `activity_logs`
+                  WHERE `created_at` < DATE_SUB(NOW(), INTERVAL :days DAY)
+                  LIMIT 500"  // LIMIT prevents long locks
+            );
+            $stmt->bindValue(':days', $days, \PDO::PARAM_INT);
+            $stmt->execute();
+            $deleted = $stmt->rowCount();
+            if ($deleted > 0) {
+                error_log("[ActivityLog] Purged {$deleted} entries older than {$days} days.");
+            }
+            return $deleted;
+        } catch (\Throwable $e) {
+            error_log('[ActivityLog] Purge failed: ' . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Purge login_attempts older than $days days.
+     * Returns number of rows deleted.
+     */
+    public static function purgeOldAttempts(int $days = 30): int
+    {
+        try {
+            $stmt = Database::getInstance()->prepare(
+                "DELETE FROM `login_attempts`
+                  WHERE `attempted_at` < DATE_SUB(NOW(), INTERVAL :days DAY)
+                  LIMIT 1000"
+            );
+            $stmt->bindValue(':days', $days, \PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->rowCount();
+        } catch (\Throwable $e) {
+            error_log('[ActivityLog] Purge attempts failed: ' . $e->getMessage());
+            return 0;
+        }
+    }
 }
