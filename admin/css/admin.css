@@ -55,7 +55,7 @@ button { font-family: var(--font); cursor: pointer; }
 input, select, textarea { font-family: var(--font); }
 
 /* ---------- Shell ---------- */
-.cms-shell { display: flex; min-height: 100vh; }
+.cms-shell { display: flex; height: 100vh; overflow: hidden; }
 
 /* ---------- Sidebar ---------- */
 .cms-sidebar {
@@ -171,6 +171,8 @@ input, select, textarea { font-family: var(--font); }
   margin-left: var(--sb-width);
   flex: 1; min-width: 0;
   display: flex; flex-direction: column;
+  overflow: hidden;
+  height: 100%;
 }
 
 /* ---------- Header ---------- */
@@ -231,7 +233,7 @@ input, select, textarea { font-family: var(--font); }
 .cms-hamburger:hover { background: var(--bg); }
 
 /* ---------- Main Content ---------- */
-.cms-main { flex: 1; padding: 28px 32px; overflow-x: hidden; }
+.cms-main { flex: 1; padding: 28px 32px; overflow-x: hidden; overflow-y: auto; }
 
 /* ---------- Page Header ---------- */
 .cms-page-header {
