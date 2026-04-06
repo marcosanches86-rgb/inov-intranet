@@ -14,7 +14,7 @@ define('APP_URL',     getenv('APP_URL')     ?: 'https://intranet.inov.ao');
 
 // ── Session ───────────────────────────────────────────────────────
 define('SESSION_NAME',     'INOV_SID');
-define('SESSION_LIFETIME', 7200); // 2 hours in seconds
+define('SESSION_LIFETIME', 28800); // 8 hours in seconds
 
 // ── Paths ─────────────────────────────────────────────────────────
 define('BASE_PATH',         dirname(__DIR__));
